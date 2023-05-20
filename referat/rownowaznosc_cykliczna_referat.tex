@@ -1,0 +1,138 @@
+\documentclass{scrartcl}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{relsize}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{listings}
+\usepackage{csquotes}
+\usepackage{mathtools, amsmath, amsthm, amsfonts, amssymb}
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+\usepackage{braket}
+
+\usepackage{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{url}
+
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+colorlinks=true,
+linkcolor=BrickRed,
+citecolor=Green,
+urlcolor=blue,
+frenchlinks=true,
+pdftitle={Równoważność cykliczna ciągów},
+pdfpagemode=FullScreen,
+}
+
+\usepackage[backend=biber, sorting=ynt]{biblatex}
+\addbibresource{bibliografia.bib}
+
+\addtokomafont{title}{\normalfont\bfseries}
+\addtokomafont{disposition}{\rmfamily}
+
+\title{Równoważność cykliczna ciągów}
+\subtitle{Definicja problemu i przedstawienie rozwiązań}
+\date{2023}
+\author{Mikołaj Juda}
+
+\renewcommand\qedsymbol{\(\blacksquare\)}
+
+\theoremstyle{definition}
+\newtheorem{cyclic_equivalence_1}{Definicja}[section]
+\theoremstyle{definition}
+\newtheorem{cyclic_equivalence_2}
+[cyclic_equivalence_1]{Definicja}
+\newtheorem{lemma_k0_values}{Lemat}[section]
+\newtheorem{less_k0_values_to_check}[lemma_k0_values]{Wniosek}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+\relscale{1.4}
+\maketitle
+\begin{abstract}
+    W referacie przedstawiono
+    problem równoważności cyklicznej ciągów
+    oraz różne algorytmy do jego rozwiązania
+    razem z implementacją w języku Python.
+    Pokrótce omówiono algorytm naiwny
+    oraz algorytm korzystający z wyszukiwania wzorca.
+    Przedstawiono również
+    szybki algorytmie sprawdzania równoważności
+    list cyklicznych Shiloacha(1979)\cite{shiloach1979}
+    oraz szczegółowo opisano dowód jego poprawności
+    i analizę złożoności obliczeniowej.
+\end{abstract}
+\tableofcontents
+\pagebreak
+\section{Definicja problemu}
+Dane są dwa ciągi
+\(A=(a_0,\ldots,a_{n-1})\) oraz \(B=(b_0,\ldots,b_{n-1})\)
+długości \(n\).\linebreak
+\(A\) i \(B\) są \emph{równoważne cyklicznie}
+(\(A\equiv B\)),
+gdy są równe w sensie list cyklicznych tzn.
+\begin{cyclic_equivalence_1}
+    \label{def:cyclic_equivalence_1}
+    \[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
+        \forall_{k\in\set{0,\ldots,n-1}}\ a_{(k_0+k)\Mod{n}}=b_k\]
+\end{cyclic_equivalence_1}
+
+Dla wygody dalszego zapisu oznaczmy:
+\[a_k\coloneq a_{k\Mod{n}},\ b_k\coloneq b_{k\Mod{n}}
+    \ \text{dla wszystkich}\ k\ge n\]
+
+Zdefiniujmy \(A_k\) jako listę powstałą z przesunięcia cyklicznego
+ciągu \(A\) takiego, że \(a_k\) jest pierwszym elementem ciągu \(A_k\).
+Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\ldots,a_{n-1}]\),
+oraz \(B_0=[b_0,\ldots,b_{n-1}]\)}
+\begin{align*}
+    A_k=[a_{k},\ldots,a_n,a_0,\ldots,a_{k-1}] \\
+    B_k=[b_{k},\ldots,b_n,b_0,\ldots,b_{k-1}]
+\end{align*}
+
+Definicję \cref{def:cyclic_equivalence_1} można
+przedstawić równoważnie jako:
+\begin{cyclic_equivalence_2}
+    \[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
+        \ A_{k_0}=B_0\]
+\end{cyclic_equivalence_2}
+
+Podsumowując, problem brzmi:
+\enquote{Czy istnieje takie przesunięcie cykliczne jednego ciągu,
+    że jest po nim równy drugiemu ciagowi?}
+\pagebreak
+\section{Algorytm naiwny}
+\subsection{Opis}
+Z \hyperref[def:cyclic_equivalence_1]
+{Definicji \ref*{def:cyclic_equivalence_1}}
+można łatwo zauważyć, że
+\begin{lemma_k0_values}
+    \label{lem:lemma_k0_values}
+    Jeżeli nie istnieje \(k_0\in\set{0,\ldots, n-1}\) spełniające warunek:
+    \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{k_0+k}=b_k\]
+    to nie istnieje \(k_0\in\mathbb{Z}\) spełniające ten warunek.
+\end{lemma_k0_values}
+\begin{proof}
+    Oczywiste.
+\end{proof}
+\begin{less_k0_values_to_check}
+    \label{cor:less_k0_values_to_check}
+    Żeby ustalić istnienie \(k_0\) z
+    \hyperref[def:cyclic_equivalence_1]
+    {Definicji \ref*{def:cyclic_equivalence_1}}
+    wystarczy sprawdzić czy
+    \[\exists_{k_0\in\set{0,\ldots,n-1}}
+        \forall_{k\in\set{0,\ldots,n-1}}\ a_{k_0+k}=b_k\]
+\end{less_k0_values_to_check}
+
+Algorytm naiwny sprawdza dla każdego \(c\in\set{0,\ldots,n-1}\)
+czy \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{c+k}=b_k\]
+Jeśli trafi na \(c\) spełniające warunek to zwraca \lstinline|True|,
+w przeciwnym wypadku zwraca \lstinline|False|.
+Algorytm ma złożoność kwadratową.\cite{wazniakmimuw}
+\subsection{Implementacja}
+\lstinputlisting[language=Python]{naive.py} %TODO try minted
+\pagebreak
+\printbibliography[heading=bibintoc]
+\end{document}
