@@ -5,10 +5,12 @@
 \usepackage[polish]{babel}
 \usepackage{minted}
 \usemintedstyle{autumn}
+\usepackage{algpseudocode}
 \usepackage{csquotes}
 \usepackage{mathtools, amsmath, amsthm, amsfonts, amssymb}
 \newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
 \usepackage{braket}
+\usepackage{enumitem}
 
 \usepackage{hyperref}
 \usepackage[capitalize,nameinlink]{cleveref}
@@ -40,11 +42,26 @@ pdfpagemode=FullScreen,
 
 \theoremstyle{definition}
 \newtheorem{cyclic_equivalence_1}{Definicja}[section]
-\theoremstyle{definition}
 \newtheorem{cyclic_equivalence_2}
 [cyclic_equivalence_1]{Definicja}
+
+\theoremstyle{plain}
 \newtheorem{lemma_k0_values}{Lemat}[section]
 \newtheorem{less_k0_values_to_check}{Wniosek}[section]
+
+\theoremstyle{remark}
+\newtheorem{A_i_B_j_all_rotations}{Uwaga}[section]
+
+\theoremstyle{plain}
+\newtheorem{lemma_equiv_if_lex_min_eq}{Lemat}[section]
+\newtheorem{lemma_k_shift_greater}
+[lemma_equiv_if_lex_min_eq]{Lemat}
+\newtheorem{lemma_1_n_in_d_no_equiv}
+[lemma_equiv_if_lex_min_eq]{Lemat}
+\newtheorem{lemma_niezmiennik}[lemma_equiv_if_lex_min_eq]{Lemat}
+\newtheorem{not_storing_sets}{Wniosek}[section]
+\newtheorem{termination_theorem}{Twierdzenie}[section]
+\newtheorem{correctness_theorem}[termination_theorem]{Twierdzenie}
 
 \setlength\parindent{0pt}
 
@@ -52,86 +69,87 @@ pdfpagemode=FullScreen,
 \relscale{1.4}
 \maketitle
 \begin{abstract}
-    W referacie przedstawiono
-    problem równoważności cyklicznej ciągów
-    oraz różne algorytmy do jego rozwiązania
-    razem z implementacją w języku Python.
-    Pokrótce omówiono algorytm naiwny
-    oraz algorytm korzystający z wyszukiwania wzorca.
-    Przedstawiono również
-    szybki algorytmie sprawdzania równoważności
-    list cyklicznych Shiloacha(1979)\cite{shiloach1979}
-    oraz szczegółowo opisano dowód jego poprawności
-    i analizę złożoności obliczeniowej.
+	W referacie przedstawiono
+	problem równoważności cyklicznej ciągów
+	oraz różne algorytmy do jego rozwiązywaia
+	razem z implementacją w języku Python.
+	Pokrótce omówiono algorytm naiwny
+	oraz algorytm korzystający z wyszukiwania wzorca.
+	Przedstawiono również
+	szybki algorytm sprawdzania równoważności
+	list cyklicznych Shiloacha(1979)\cite{shiloach1979}
+	zmodyfikowany do obsługi ciągów
+	numerowanych od \(0\)\cite{wazniakmimuw}.
+	oraz szczegółowo wyjaśniono dowód jego poprawności
+	i analizę złożoności obliczeniowej.
 \end{abstract}
 \tableofcontents
 \pagebreak
 \section{Definicja problemu}
 Dane są dwa ciągi
-\(A=(a_0,\ldots,a_{n-1})\) oraz \(B=(b_0,\ldots,b_{n-1})\)
+\(A=(a_0,\dots,a_{n-1})\) oraz \(B=(b_0,\dots,b_{n-1})\)
 długości \(n\).\linebreak
 \(A\) i \(B\) są \emph{równoważne cyklicznie}
 (\(A\equiv B\)),
 gdy są równe w sensie list cyklicznych tzn.
-\begin{cyclic_equivalence_1}
-    \label{def:cyclic_equivalence_1}
-    \[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
-        \forall_{k\in\set{0,\ldots,n-1}}\ a_{(k_0+k)\Mod{n}}=b_k\]
+\begin{cyclic_equivalence_1}[Równoważność cykliczna]
+	\label{def:cyclic_equivalence_1}
+	\[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
+		\forall_{k\in\set{0,\dots,n-1}}\ a_{(k_0+k)\Mod{n}}=b_k\]
 \end{cyclic_equivalence_1}
 
 Dla wygody dalszego zapisu oznaczmy:
 \[a_k\coloneq a_{k\Mod{n}},\ b_k\coloneq b_{k\Mod{n}}
-    \ \text{dla wszystkich}\ k\ge n\]
+	\ \text{dla wszystkich}\ k\ge n\]
 
 Zdefiniujmy \(A_k\) jako listę powstałą z przesunięcia cyklicznego
 ciągu \(A\) takiego, że \(a_k\) jest
 pierwszym elementem ciągu \(A_k\).
-Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\ldots,a_{n-1}]\),
-oraz \(B_0=[b_0,\ldots,b_{n-1}]\)}
+Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\dots,a_{n-1}]\),
+oraz \(B_0=[b_0,\dots,b_{n-1}]\)}
 \begin{align*}
-    A_k=[a_{k},\ldots,a_n,a_0,\ldots,a_{k-1}] \\
-    B_k=[b_{k},\ldots,b_n,b_0,\ldots,b_{k-1}]
+	A_k=[a_{k},\dots,a_n,a_0,\dots,a_{k-1}] \\
+	B_k=[b_{k},\dots,b_n,b_0,\dots,b_{k-1}]
 \end{align*}
 
 Definicję \cref{def:cyclic_equivalence_1} można
 przedstawić równoważnie jako:
-\begin{cyclic_equivalence_2}
-    \[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
-        \ A_{k_0}=B\]
+\begin{cyclic_equivalence_2}[Równoważność cykliczna]
+	\[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
+		\ A_{k_0}=B\]
 \end{cyclic_equivalence_2}
 
 Podsumowując, problem brzmi:
 \enquote{Czy istnieje takie przesunięcie cykliczne jednego ciągu,
-    że jest po nim równy drugiemu ciagowi?}
+	że jest po nim równy drugiemu ciagowi?}
 \pagebreak
 \section{Algorytm naiwny} \label{sec:naive_alg}
-\subsection{Opis}
 Z \hyperref[def:cyclic_equivalence_1]
 {Definicji \ref*{def:cyclic_equivalence_1}}
 można łatwo zauważyć, że
 \begin{lemma_k0_values}
-    \label{lem:lemma_k0_values}
-    Jeżeli nie istnieje
-    \(k_0\in\set{0,\ldots, n-1}\) spełniające warunek:
-    \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{k_0+k}=b_k\]
-    to nie istnieje \(k_0\in\mathbb{Z}\) spełniające ten warunek.
+	\label{lem:lemma_k0_values}
+	Jeżeli nie istnieje
+	\(k_0\in\set{0,\dots, n-1}\) spełniające warunek:
+	\[\forall_{k\in\set{0,\dots,n-1}}\ a_{k_0+k}=b_k\]
+	to nie istnieje \(k_0\in\mathbb{Z}\) spełniające ten warunek.
 \end{lemma_k0_values}
 \begin{proof}
-    Oczywiste.
+	Oczywiste.
 \end{proof}
 \begin{less_k0_values_to_check}
-    \label{cor:less_k0_values_to_check}
-    Żeby ustalić istnienie \(k_0\) z
-    \hyperref[def:cyclic_equivalence_1]
-    {Definicji \ref*{def:cyclic_equivalence_1}}
-    wystarczy sprawdzić czy
-    \[\exists_{k_0\in\set{0,\ldots,n-1}}
-        \forall_{k\in\set{0,\ldots,n-1}}\ a_{k_0+k}=b_k\]
+	\label{cor:less_k0_values_to_check}
+	Żeby ustalić istnienie \(k_0\) z
+	\hyperref[def:cyclic_equivalence_1]
+	{Definicji \ref*{def:cyclic_equivalence_1}}
+	wystarczy sprawdzić czy
+	\[\exists_{k_0\in\set{0,\dots,n-1}}
+		\forall_{k\in\set{0,\dots,n-1}}\ a_{k_0+k}=b_k\]
 \end{less_k0_values_to_check}
 \vskip 2em
 
-Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\ldots,n-1}\)
-czy \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{l+k}=b_k\]
+Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\dots,n-1}\)
+czy \[\forall_{k\in\set{0,\dots,n-1}}\ a_{l+k}=b_k\]
 Jeśli trafi na \(l\) spełniające warunek
 to mamy \(k_0=l\)
 i algorytm zwraca \mintinline{python3}|True|,
@@ -141,11 +159,16 @@ Algorytm ma złożoność kwadratową.\cite{wazniakmimuw}
 \inputminted{python3}{naive.py}
 \pagebreak
 \section{Algorytm wykorzystujący wyszukiwanie wzorca}
-\subsection{Opis}
-Utwórzmy listę \[AA=[a_0,\ldots, a_{n-1}, a_0,\ldots, a_{n-1}]\]
-i zauważmy, że każdy spójny podciąg \(AA\) o długości \(n\)
+Utwórzmy listę \[AA=[a_0,\dots, a_{n-1}, a_0,\dots, a_{n-1}]\]
+i zauważmy, że dowolny spójny podciąg \(AA\) o długości \(n\)
 rozpoczynający się od indeksu \(k\) ma postać \(A_k\),
 czyli jest przesunięciem cyklicznym ciągu \(A\).
+\begin{A_i_B_j_all_rotations}
+	\label{cor:A_i_B_j_all_rotations}
+	Łatwo zauważyć, że
+	\[\set{A_0,\dots,A_{n-1}}=
+		\set{A_\mathbb{Z}}\]
+\end{A_i_B_j_all_rotations}
 Zatem jeśli sprawdzimy czy \(B\) jest spójnym podciągiem \(AA\)
 to otrzymamy rozwiązanie problemu równoważnosci cyklicznej.
 
@@ -160,16 +183,218 @@ umożliwia sprawdzenie równoważności cyklicznej
 w czasie liniowym.\cite{alg}
 Wersja wykorzystujaca algorytm Knutha-Morrisa-Pratta
 wykonuje około 5n porównań.\cite{shiloach1979}
+Wymaga on jednak dodatkowej pamięci (liniowa złożoność pamięciowa).
 \pagebreak
 \subsection[Implementacja]{Implementacja\footnote{
-        Użyta implementacja algorytmu KMP (z modyfikacjami)
-        pochodzi ze strony:\\
-        \url{https://www.geeksforgeeks.org/%
-            python-program-for-kmp-algorithm%
-            -for-pattern-searching-2/}
-    }}
+		Użyta implementacja algorytmu KMP (z modyfikacjami)
+		pochodzi ze strony:\\
+		\url{https://www.geeksforgeeks.org/%
+			python-program-for-kmp-algorithm%
+			-for-pattern-searching-2/}
+	}}
 \inputminted[fontsize=\normalsize]{python3}{pattern_matching.py}
+\pagebreak
+\section[Algorytm szybki]{Algorytm szybki\footnote{
+	  Będę używał nieco innych oznaczeń niż w \cite{shiloach1979}
+  }}
+Algorytm wymaga istnienia porządku liniowego na zbiorze
+\[\set{a_0,\dots,a_{n-1},b_0,\dots,b_{n-1}}\]
+Niech \(a\le b\) oznacza, że \(a\) poprzedza
+lub jest równe \(b\) w tym porządku, a \(a< b\) oznacza
+\(x\le b \land a\neq b\).
 
+Wtedy porządek leksykograficzny
+na zbiorze \[\set{A_0,\dots,A_{n-1},B_0,\dots,B_{n-1}}\]
+jest dobrym porządkiem.\\
+Niech \(A_i\preceq B_j\) oznacza, że \(A_i\) poprzedza
+lub jest równe \(B_j\) w porządku leksykograficznym,
+a \(A_i\prec B_j\) oznacza \(A_i\preceq B_j \land A_i\neq B_j\).
+
+Niech
+\[A_{i_0}=\min(\set{A_0,\dots,A_{n-1}})
+	\ \text{tzn.}\ \forall_{0\le i<n-1}A_{i_0}\preceq A_i\]
+analogicznie
+\[B_{j_0}=\min(\set{B_0,\dots,B_{n-1}})\]\footnote{
+	Lexicographically minimal string rotation
+}
+\begin{lemma_equiv_if_lex_min_eq}
+	\label{lem:equivalence_if_lex_min_eq}
+	\[A\equiv B \iff A_{i_0}=B_{j_0}\]
+\end{lemma_equiv_if_lex_min_eq}
+\begin{proof}
+	Oczywiste.
+\end{proof}
+\begin{lemma_k_shift_greater}
+	\label{lem:k_shift_greater}
+	\[\forall_{0\le l<k}\ a_{i+l}=b_{j+l} \land a_{i+k}<b_{j+k}
+		\implies \forall_{0\le l\le k}\ A_{i+l}\prec B_{j+l}\]
+\end{lemma_k_shift_greater}
+\begin{proof}
+	Trywialne.
+\end{proof}
+Zdefiniujmy
+\[D_A=\set{i:\exists_j\ B_j\prec A_i}\]
+analogicznie
+\[D_B=\set{j:\exists_i\ A_i\prec B_j}\]
+tzn. \(D_A\) to zbiór indeksów
+wyznaczających takie przesunięcia cykliczne \(A\),
+dla których istnieje przesunięcie cykliczne \(B\)
+poprzedzające je w porządku leksykograficznym.
+Analogicznie dla \(B\).
+\pagebreak
+
+Zdefiniujmy
+\[i_D=\begin{cases}
+		-1        & \text{jeżeli}\ D_A=\emptyset  \\
+		\max(D_A) & \text{w przeciwnym przypadku}
+	\end{cases}\]
+\[j_D=\begin{cases}
+		-1        & \text{jeżeli}\ D_B=\emptyset  \\
+		\max(D_B) & \text{w przeciwnym przypadku}
+	\end{cases}\]
+\begin{lemma_1_n_in_d_no_equiv}
+	\label{lem:1_n_in_d_no_equiv}
+	\[D_A\supseteq\set{0,\dots,n-1}\lor
+		D_B\supseteq\set{0,\dots,n-1}
+		\implies A\neq B\]
+\end{lemma_1_n_in_d_no_equiv}
+\begin{proof}
+	Dowód wynika z
+	\hyperref[lem:equivalence_if_lex_min_eq]
+	{Lematu \ref*{lem:equivalence_if_lex_min_eq}}
+	\[A\equiv B\implies i_0\notin D_A \land j_0\notin D_B\]
+\end{proof}
+\subsection{Algorytm}
+Główną częścią algorytmu jest szybkie zbieranie indeksów
+przesunięć cyklicznych, które powinny być
+w zbiorach \(D_A\) i \(D_B\).\footnote{
+	W implementacji te zbiory są niejawne.
+}
+dopóki nie zajdzie jeden z poniższych warunków stopu:
+\begin{enumerate}[label=(\arabic*)]
+	\item \label{term_cond_1} \(D_A\supseteq\set{0,\dots,n-1}\)
+	\item \label{term_cond_2}\(D_B\supseteq\set{0,\dots,n-1}\)
+	\item \label{term_cond_3}Znajdziemy takie \(i\) oraz \(j\),
+	      że \(\forall_{0\le k\le n-1}\ a_{i+k}=b_{j+k}\)
+	      (tzn. \(A\equiv B\))
+\end{enumerate}
+Głównym elementem algorytmu będzie procedura \textsc{compare},
+która znajduje pierwszy indeks \(k\),
+dla którego \(a_{i+k}\neq b_{j+k}\)
+i w zależności od tego, czy \(a_{i+k}<b_{j+k}\)
+dodaje do \(D_B\) zbiór \(\set{j,\dots,j+k}\)
+albo do \(D_A\) zbiór \(\set{i,\dots,i+k}\)
+(Patrz \cref{lem:k_shift_greater}).
+Jeśli nie znajdzie nierówności to zwraca \(A\equiv B\).
+
+Procedura \textsc{rowncykl} wykonuje procedurę
+\textsc{compare} dopóki nie zajdzie jeden z powyższych warunków.
+\pagebreak
+
+\begin{algorithmic}
+	\State \(D_a\gets \emptyset\)
+	\State \(D_b\gets \emptyset\)
+	\State \(i_D\gets -1\)
+	\State \(j_D\gets -1\)
+	\Procedure{compare}{$i, j$}
+	\For{$k=0,\dots,n-1$}
+	\If{\(a_{i+k}\neq b_{j+k}\)\footnote{W analizie
+			złożoności będziemy liczyć te porównania}}
+	\If{\(a_{i+k}<b_{j+k}\)}
+	\State \(D_a\gets D_a\cup\set{i,\dots,i+k}\)
+	\Else
+	\State \(D_b\gets D_b\cup\set{j,\dots,j+k}\)
+	\EndIf
+	\State \(i_D\gets i+k\)
+	\State \(j_D\gets j+k\)
+	\State \Return
+	\EndIf
+	\EndFor
+	\State \Return{\(A\equiv B\)}
+	\EndProcedure
+	\Procedure{rowncykl}{$A, B$}
+	\State \(D_a\gets \emptyset\)
+	\State \(D_b\gets \emptyset\)
+	\State \(i_D\gets -1\)
+	\State \(j_D\gets -1\)
+	\While{\(D_A\nsupseteq\set{0,\dots,n-1}\land
+		D_B\nsupseteq\set{0,\dots,n-1}\)}
+	\If{\Call{compare}{$i_D+1,j_D+1$} returns \(A\equiv B\)}
+	\State \Return{\(A\equiv B\)}
+	\EndIf
+	\EndWhile
+	\State \Return{\(A\not\equiv B\)}
+	\EndProcedure
+\end{algorithmic}
+\pagebreak
+\subsection{Poprawność}
+\begin{lemma_niezmiennik}[Niezmiennik]
+	\label{lem:niezmiennik}
+	Po każdym wykonaniu procedury \textnormal{\textsc{compare}}
+	\(D_A\) oraz \(D_B\) mają postać
+	\[D_A=\set{0,\dots,i_D}\]
+	\[D_B=\set{0,\dots,j_D}\]
+	tzn. w \(D_A\) nie brakuje żadnego elementu
+	między \(0\) a \(i_D\), analogicznie w \(D_B\)
+	nie brakuje
+	żadnego elementu między \(0\) a \(j_D\).
+\end{lemma_niezmiennik}
+\begin{proof}
+	Dowód wynika trywialnie z faktu, że
+	jedyny sposób, w jaki modyfikowane jest \(D_A\)
+	to \[D_a\gets D_a\cup\set{i_D+1,\dots,i_D+k}\]
+	analogicznie dla \(D_B\)
+	\[D_b\gets D_b\cup\set{j_D+1,\dots,j_D+k}\]
+\end{proof}
+\begin{not_storing_sets}
+	Z \hyperref[lem:niezmiennik]{Lematu \ref*{lem:niezmiennik}}
+	wynika, że nie musimy przechowywać zbiorów \(D_A\) i \(D_B\),
+	wystarczy nam jedynie \(i_D\) oraz \(j_D\).
+\end{not_storing_sets}
+\begin{termination_theorem}
+	\label{thm:termination}
+	Procedura \textnormal{\textsc{rowncykl}}
+	ma własność stopu.
+\end{termination_theorem}
+\begin{proof}
+	Jeżeli dla jakiegoś \(i\) oraz \(j\) procedura
+	\textsc{compare} zwróci \(A\equiv B\) to
+	\textsc{rowncykl} się zatrzymuje.
+
+	Jeżeli procedura \textsc{compare} nie zwróci \(A\equiv B\)
+	dla żadnego \(i\) oraz \(j\) to z każdym wywołaniem
+	\textsc{compare} \(i_D+j_D\) rośnie co najmniej o \(1\),
+	więc w końcu
+	(z \hyperref[lem:niezmiennik]{Lematu \ref*{lem:niezmiennik}})
+	\hyperref[term_cond_1]{warunek stopu 1}
+	lub \hyperref[term_cond_2]{warunek stopu 2}
+	zostanie spełniony i procedura
+	\textsc{rowncykl} się zatrzyma.
+\end{proof}
+\begin{correctness_theorem}
+	\label{thm:correctness}
+	Procedura \textnormal{\textsc{rowncykl}}
+	zwraca \(A\equiv B\) wtedy i tylko wtedy
+	gdy \(A\equiv B\).
+\end{correctness_theorem}
+\begin{proof}
+	Jeżeli procedura \textsc{rowncykl} zwrócła \(A\equiv B\)
+	to znaczy, że procedura \textsc{compare}
+	wykazała równość dwóch przesunięć cyklicznych \(A\) i \(B\),
+	a więc \(A\equiv B\).
+	Jeżeli procedura \textsc{rowncykl} nie zwróci \(A\equiv B\)
+	to zwróci \(A\not\equiv B\), gdyż z
+	\hyperref[thm:termination]{Twierdzenia \ref*{thm:termination}}
+	wiemy, że zawsze się zatrzymuje.
+	Zwrócenie \(A\not\equiv B\) oznacza, że wystąpił
+	\hyperref[term_cond_1]{warunek stopu 1} lub
+	\hyperref[term_cond_2]{warunek stopu 2},
+	więc z \hyperref[lem:1_n_in_d_no_equiv]
+	{Lematu \ref*{lem:1_n_in_d_no_equiv}} \(A\not\equiv B\).
+\end{proof}
+\pagebreak
+\subsection{Złożoność}
+LOL
 \pagebreak
 \printbibliography[heading=bibintoc]
 \end{document}
