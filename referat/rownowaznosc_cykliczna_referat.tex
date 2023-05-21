@@ -8,6 +8,8 @@
 \usepackage{algpseudocode}
 \usepackage{csquotes}
 \usepackage{mathtools, amsmath, amsthm, amsfonts, amssymb}
+\usepackage{commath}
+\usepackage{mismath}
 \newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
 \usepackage{braket}
 \usepackage{enumitem}
@@ -62,6 +64,17 @@ pdfpagemode=FullScreen,
 \newtheorem{not_storing_sets}{Wniosek}[section]
 \newtheorem{termination_theorem}{Twierdzenie}[section]
 \newtheorem{correctness_theorem}[termination_theorem]{Twierdzenie}
+
+\theoremstyle{definition}
+\newtheorem{def_success_compare}{Definicja}[section]
+\newtheorem{def_D_star}[def_success_compare]{Definicja}
+
+\theoremstyle{plain}
+\newtheorem{lemma_unsuccesful_comparisons}
+[lemma_equiv_if_lex_min_eq]{Lemat}
+\newtheorem{lemma_d_star_len}[lemma_equiv_if_lex_min_eq]{Lemat}
+\newtheorem{complexity_theorem}[termination_theorem]{Twierdzenie}
+\newtheorem{o_complexity}[not_storing_sets]{Wniosek}
 
 \setlength\parindent{0pt}
 
@@ -347,6 +360,7 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	\[D_b\gets D_b\cup\set{j_D+1,\dots,j_D+k}\]
 \end{proof}
 \begin{not_storing_sets}
+	\label{cor:not_storing_sets}
 	Z \hyperref[lem:niezmiennik]{Lematu \ref*{lem:niezmiennik}}
 	wynika, że nie musimy przechowywać zbiorów \(D_A\) i \(D_B\),
 	wystarczy nam jedynie \(i_D\) oraz \(j_D\).
@@ -394,7 +408,65 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 \end{proof}
 \pagebreak
 \subsection{Złożoność}
-LOL
+\begin{def_success_compare}
+	\label{def:success_compare}
+	Wykonanie procedury \textnormal{\textsc{compare}}
+	nazwiemy \emph{udanym}, jeżeli zwróci \(A\equiv B\).
+	(Wykonanie, które nie jest udane jest \emph{nieudane})
+\end{def_success_compare}
+\begin{def_D_star}
+	\label{def:D_star}
+	Oznaczmy \(D_A\) oraz \(D_B\)
+	bezpośredionio przed ostatnim wykonaniem
+	procedury \textnormal{\textsc{compare}}
+	jako odpowiednio \(D_A^*\) oraz \(D_B^*\).
+\end{def_D_star}
+\begin{lemma_unsuccesful_comparisons}
+	\label{lem:unsuccesful_comparisons}
+	Łączna liczba porównań wykonanych przez
+	nieudane wywołania procedury
+	\textnormal{\textsc{compare}}
+	wynosi \(\abs{D_A}+\abs{D_B}\)
+\end{lemma_unsuccesful_comparisons}
+\begin{proof}
+	Każde wywołanie procedury \textsc{compare}
+	za wyjątkiem ostatniego jest nieudane
+	i zwiększa \(\abs{D_A}+\abs{D_B}\)
+	o dokładnie tyle ile wykonało porównań.
+	Wynika to trywialnie z definicji
+	procedury \textsc{compare}.
+\end{proof}
+\begin{lemma_d_star_len}
+	\label{lem:d_star_len}
+	\(\abs{D_A^*}+\abs{D_B^*}\leq2n-2\)
+\end{lemma_d_star_len}
+\begin{proof}
+	Jeśli \(\abs{D_A^*}+\abs{D_B^*}\ge2n-1\)
+	to oznacza, że
+	\[\set{0,\dots,n-1}\subset D_A^* \lor
+		\set{0,\dots,n-1}\subset D_B^*\]
+	co nie jest możliwe (patrz \cref{def:D_star}).
+\end{proof}
+\begin{complexity_theorem}
+	Algorytm wykonuje co najwyżej \(3n-2\) porównań.
+\end{complexity_theorem}
+\begin{proof}
+	Dowód wynika z
+	\hyperref[lem:unsuccesful_comparisons]
+	{Lematu \ref*{lem:unsuccesful_comparisons}}
+	oraz
+	\hyperref[lem:d_star_len]{Lematu \ref*{lem:d_star_len}},
+	gdyż ostatnie wywołanie procedury \textsc{compare}
+	może wykonać co najwyżej \(n\) porównań.
+\end{proof}
+\begin{o_complexity}
+	Algorytm ma pesymistyczną złożoność czasową \(\bigO(n)\)
+	i dodatkową złożoność pamięciową \(\bigO(1)\)%
+	(z \hyperref[cor:not_storing_sets]
+	{Wniosku \ref*{cor:not_storing_sets}})
+\end{o_complexity}
+\pagebreak
+\subsection{Implementacja}
 \pagebreak
 \printbibliography[heading=bibintoc]
 \end{document}
