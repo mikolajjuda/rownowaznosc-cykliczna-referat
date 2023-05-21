@@ -3,7 +3,8 @@
 \usepackage{relsize}
 \usepackage[T1]{fontenc}
 \usepackage[polish]{babel}
-\usepackage{listings}
+\usepackage{minted}
+\usemintedstyle{autumn}
 \usepackage{csquotes}
 \usepackage{mathtools, amsmath, amsthm, amsfonts, amssymb}
 \newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
@@ -109,7 +110,8 @@ Z \hyperref[def:cyclic_equivalence_1]
 można łatwo zauważyć, że
 \begin{lemma_k0_values}
     \label{lem:lemma_k0_values}
-    Jeżeli nie istnieje \(k_0\in\set{0,\ldots, n-1}\) spełniające warunek:
+    Jeżeli nie istnieje
+    \(k_0\in\set{0,\ldots, n-1}\) spełniające warunek:
     \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{k_0+k}=b_k\]
     to nie istnieje \(k_0\in\mathbb{Z}\) spełniające ten warunek.
 \end{lemma_k0_values}
@@ -126,13 +128,15 @@ można łatwo zauważyć, że
         \forall_{k\in\set{0,\ldots,n-1}}\ a_{k_0+k}=b_k\]
 \end{less_k0_values_to_check}
 
-Algorytm naiwny sprawdza dla każdego \(c\in\set{0,\ldots,n-1}\)
-czy \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{c+k}=b_k\]
-Jeśli trafi na \(c\) spełniające warunek to zwraca \lstinline|True|,
-w przeciwnym wypadku zwraca \lstinline|False|.
+Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\ldots,n-1}\)
+czy \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{l+k}=b_k\]
+Jeśli trafi na \(l\) spełniające warunek
+to mamy \(k_0=l\)
+i algorytm zwraca \mintinline{python3}|True|,
+w przeciwnym wypadku zwraca \mintinline{python3}|False|.
 Algorytm ma złożoność kwadratową.\cite{wazniakmimuw}
 \subsection{Implementacja}
-\lstinputlisting[language=Python]{naive.py} %TODO try minted
+\inputminted{python3}{naive.py}
 \pagebreak
 \printbibliography[heading=bibintoc]
 \end{document}
