@@ -44,7 +44,7 @@ pdfpagemode=FullScreen,
 \newtheorem{cyclic_equivalence_2}
 [cyclic_equivalence_1]{Definicja}
 \newtheorem{lemma_k0_values}{Lemat}[section]
-\newtheorem{less_k0_values_to_check}[lemma_k0_values]{Wniosek}
+\newtheorem{less_k0_values_to_check}{Wniosek}[section]
 
 \setlength\parindent{0pt}
 
@@ -84,7 +84,8 @@ Dla wygody dalszego zapisu oznaczmy:
     \ \text{dla wszystkich}\ k\ge n\]
 
 Zdefiniujmy \(A_k\) jako listę powstałą z przesunięcia cyklicznego
-ciągu \(A\) takiego, że \(a_k\) jest pierwszym elementem ciągu \(A_k\).
+ciągu \(A\) takiego, że \(a_k\) jest
+pierwszym elementem ciągu \(A_k\).
 Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\ldots,a_{n-1}]\),
 oraz \(B_0=[b_0,\ldots,b_{n-1}]\)}
 \begin{align*}
@@ -96,14 +97,14 @@ Definicję \cref{def:cyclic_equivalence_1} można
 przedstawić równoważnie jako:
 \begin{cyclic_equivalence_2}
     \[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
-        \ A_{k_0}=B_0\]
+        \ A_{k_0}=B\]
 \end{cyclic_equivalence_2}
 
 Podsumowując, problem brzmi:
 \enquote{Czy istnieje takie przesunięcie cykliczne jednego ciągu,
     że jest po nim równy drugiemu ciagowi?}
 \pagebreak
-\section{Algorytm naiwny}
+\section{Algorytm naiwny} \label{sec:naive_alg}
 \subsection{Opis}
 Z \hyperref[def:cyclic_equivalence_1]
 {Definicji \ref*{def:cyclic_equivalence_1}}
@@ -127,6 +128,7 @@ można łatwo zauważyć, że
     \[\exists_{k_0\in\set{0,\ldots,n-1}}
         \forall_{k\in\set{0,\ldots,n-1}}\ a_{k_0+k}=b_k\]
 \end{less_k0_values_to_check}
+\vskip 2em
 
 Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\ldots,n-1}\)
 czy \[\forall_{k\in\set{0,\ldots,n-1}}\ a_{l+k}=b_k\]
@@ -137,6 +139,37 @@ w przeciwnym wypadku zwraca \mintinline{python3}|False|.
 Algorytm ma złożoność kwadratową.\cite{wazniakmimuw}
 \subsection{Implementacja}
 \inputminted{python3}{naive.py}
+\pagebreak
+\section{Algorytm wykorzystujący wyszukiwanie wzorca}
+\subsection{Opis}
+Utwórzmy listę \[AA=[a_0,\ldots, a_{n-1}, a_0,\ldots, a_{n-1}]\]
+i zauważmy, że każdy spójny podciąg \(AA\) o długości \(n\)
+rozpoczynający się od indeksu \(k\) ma postać \(A_k\),
+czyli jest przesunięciem cyklicznym ciągu \(A\).
+Zatem jeśli sprawdzimy czy \(B\) jest spójnym podciągiem \(AA\)
+to otrzymamy rozwiązanie problemu równoważnosci cyklicznej.
+
+Można więc wykorzystać tytaj dowolny algorytm wyszukiwania wzorca,
+jednakże naiwny algorytm wyszukiwania wzorca sprowadza się do
+wcześniej przedstawionego
+\hyperref[sec:naive_alg]{algorytmu naiwnego}
+i ma złożoność kwadratową.
+Wykorzystanie algorytmu wyszukiwania wzorca
+o liniowej złożoności obliczeniowej
+umożliwia sprawdzenie równoważności cyklicznej
+w czasie liniowym.\cite{alg}
+Wersja wykorzystujaca algorytm Knutha-Morrisa-Pratta
+wykonuje około 5n porównań.\cite{shiloach1979}
+\pagebreak
+\subsection[Implementacja]{Implementacja\footnote{
+        Użyta implementacja algorytmu KMP (z modyfikacjami)
+        pochodzi ze strony:\\
+        \url{https://www.geeksforgeeks.org/%
+            python-program-for-kmp-algorithm%
+            -for-pattern-searching-2/}
+    }}
+\inputminted[fontsize=\normalsize]{python3}{pattern_matching.py}
+
 \pagebreak
 \printbibliography[heading=bibintoc]
 \end{document}
