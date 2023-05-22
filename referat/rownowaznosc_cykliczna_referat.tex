@@ -9,7 +9,6 @@
 \usepackage{csquotes}
 \usepackage{mathtools, amsmath, amsthm, amsfonts, amssymb}
 \usepackage{commath}
-\usepackage{mismath}
 \newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
 \usepackage{braket}
 \usepackage{enumitem}
@@ -88,7 +87,7 @@ pdfpagemode=FullScreen,
 	razem z implementacją w języku Python.
 	Pokrótce omówiono algorytm naiwny
 	oraz algorytm korzystający z wyszukiwania wzorca.
-	Przedstawiono również
+	Przedstawiono również delikatnie uproszczony
 	szybki algorytm sprawdzania równoważności
 	list cyklicznych Shiloacha(1979)\cite{shiloach1979}
 	zmodyfikowany do obsługi ciągów
@@ -424,13 +423,13 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 \begin{lemma_unsuccesful_comparisons}
 	\label{lem:unsuccesful_comparisons}
 	Łączna liczba porównań wykonanych przez
-	nieudane wywołania procedury
-	\textnormal{\textsc{compare}}
-	wynosi \(\abs{D_A}+\abs{D_B}\)
+	wywołania procedury \textnormal{\textsc{compare}},
+	z wyjątkiem ostatniego wynosi
+	\(\abs{D_A^*}+\abs{D_B^*}\)
 \end{lemma_unsuccesful_comparisons}
 \begin{proof}
 	Każde wywołanie procedury \textsc{compare}
-	za wyjątkiem ostatniego jest nieudane
+	z wyjątkiem ostatniego jest nieudane
 	i zwiększa \(\abs{D_A}+\abs{D_B}\)
 	o dokładnie tyle ile wykonało porównań.
 	Wynika to trywialnie z definicji
@@ -460,13 +459,14 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	może wykonać co najwyżej \(n\) porównań.
 \end{proof}
 \begin{o_complexity}
-	Algorytm ma pesymistyczną złożoność czasową \(\bigO(n)\)
-	i dodatkową złożoność pamięciową \(\bigO(1)\)%
+	Algorytm ma pesymistyczną złożoność czasową \(\mathcal{O}(n)\)
+	i dodatkową złożoność pamięciową \(\mathcal{O}(1)\)%
 	(z \hyperref[cor:not_storing_sets]
 	{Wniosku \ref*{cor:not_storing_sets}})
 \end{o_complexity}
 \pagebreak
 \subsection{Implementacja}
+\inputminted{python3}{fast.py}
 \pagebreak
 \printbibliography[heading=bibintoc]
 \end{document}
