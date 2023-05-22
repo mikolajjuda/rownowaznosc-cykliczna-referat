@@ -83,15 +83,16 @@ pdfpagemode=FullScreen,
 \begin{abstract}
 	W referacie przedstawiono
 	problem równoważności cyklicznej ciągów
-	oraz różne algorytmy do jego rozwiązywaia
+	oraz różne algorytmy do jego rozwiązywania
 	razem z implementacją w języku Python.
 	Pokrótce omówiono algorytm naiwny
 	oraz algorytm korzystający z wyszukiwania wzorca.
-	Przedstawiono również delikatnie uproszczony
+	Przedstawiono również
 	szybki algorytm sprawdzania równoważności
 	list cyklicznych Shiloacha(1979)\cite{shiloach1979}
-	zmodyfikowany do obsługi ciągów
+	z modyfikacją do obsługi ciągów
 	numerowanych od \(0\)
+	i pewnymi uproszczeniami\cite{wazniakmimuw}
 	oraz szczegółowo wyjaśniono dowód jego poprawności
 	i analizę złożoności obliczeniowej.
 \end{abstract}
@@ -159,7 +160,7 @@ można łatwo zauważyć, że
 		\forall_{k\in\set{0,\dots,n-1}}\ a_{k_0+k}=b_k\]
 \end{less_k0_values_to_check}
 \vskip 2em
-
+\subsection{Algorytm}
 Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\dots,n-1}\)
 czy \[\forall_{k\in\set{0,\dots,n-1}}\ a_{l+k}=b_k\]
 Jeżeli trafi na \(l\) spełniające warunek
@@ -183,8 +184,8 @@ czyli jest przesunięciem cyklicznym ciągu \(A\).
 \end{A_i_B_j_all_rotations}
 Zatem jeżeli sprawdzimy czy \(B\) jest spójnym podciągiem \(AA\)
 to otrzymamy rozwiązanie problemu równoważnosci cyklicznej.
-
-Można więc wykorzystać tytaj dowolny algorytm wyszukiwania wzorca,
+\subsection{Algorytm}
+Można użyć do tego dowolnego algorytmu wyszukiwania wzorca,
 jednakże naiwny algorytm wyszukiwania wzorca sprowadza się do
 wcześniej przedstawionego
 \hyperref[sec:naive_alg]{algorytmu naiwnego}
@@ -193,7 +194,7 @@ Wykorzystanie algorytmu wyszukiwania wzorca
 o liniowej złożoności obliczeniowej
 umożliwia sprawdzenie równoważności cyklicznej
 w czasie liniowym.\cite{alg}
-Wersja wykorzystujaca algorytm Knutha-Morrisa-Pratta
+Wersja wykorzystująca algorytm Knutha-Morrisa-Pratta
 wykonuje około 5n porównań.\cite{shiloach1979}
 Wymaga on jednak dodatkowej pamięci (liniowa złożoność pamięciowa).
 \pagebreak
@@ -204,7 +205,8 @@ Wymaga on jednak dodatkowej pamięci (liniowa złożoność pamięciowa).
 			python-program-for-kmp-algorithm%
 			-for-pattern-searching-2/}
 	}}
-\inputminted[fontsize=\normalsize]{python3}{../implementacje/pattern_matching.py}
+\inputminted[fontsize=\normalsize]{python3}
+{../implementacje/pattern_matching.py}
 \pagebreak
 \section[Algorytm szybki]{Algorytm szybki\footnote{
 	  Będę używał nieco innych oznaczeń niż w \cite{shiloach1979}
@@ -248,7 +250,7 @@ analogicznie
 \[D_B=\set{j:\exists_i\ A_i\prec B_j}\]
 tzn. \(D_A\) to zbiór indeksów
 wyznaczających takie przesunięcia cykliczne \(A\),
-dla których istnieje przesunięcie cykliczne \(B\)
+dla których istnieje dowolne przesunięcie cykliczne \(B\)
 poprzedzające je w porządku leksykograficznym.
 Analogicznie dla \(B\).
 \pagebreak
@@ -282,18 +284,19 @@ w zbiorach \(D_A\) i \(D_B\).\footnote{
 }
 dopóki nie zajdzie jeden z poniższych warunków stopu:
 \begin{enumerate}[label=(\arabic*)]
-	\item \label{term_cond_1} \(D_A\supseteq\set{0,\dots,n-1}\)
-	\item \label{term_cond_2}\(D_B\supseteq\set{0,\dots,n-1}\)
-	\item \label{term_cond_3}Znajdziemy takie \(i\) oraz \(j\),
+	\item \label{term_cond_1} \(D_A\supseteq\set{0,\dots,n-1}
+	      \lor D_B\supseteq\set{0,\dots,n-1}\)
+	\item \label{term_cond_2}Znajdziemy takie \(i\) oraz \(j\),
 	      że \(\forall_{0\le k\le n-1}\ a_{i+k}=b_{j+k}\)
 	      (tzn. \(A\equiv B\))
 \end{enumerate}
 Głównym elementem algorytmu będzie procedura \textsc{compare},
 która znajduje pierwszy indeks \(k\),
 dla którego \(a_{i+k}\neq b_{j+k}\)
-i w zależności od tego, czy \(a_{i+k}<b_{j+k}\)
+i w zależności od tego, czy
+\(a_{i+k}<b_{j+k}\)
 dodaje do \(D_B\) zbiór \(\set{j,\dots,j+k}\)
-albo do \(D_A\) zbiór \(\set{i,\dots,i+k+1}\)
+albo do \(D_A\) zbiór \(\set{i,\dots,i+k}\)
 (Patrz \cref{lem:k_shift_greater}).
 Jeżeli nie znajdzie nierówności to zwraca \(A\equiv B\).
 
@@ -308,11 +311,11 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	\If{\(a_{i+k}\neq b_{j+k}\)\footnote{W analizie
 			złożoności będziemy liczyć te porównania}}
 	\If{\(a_{i+k}<b_{j+k}\)}
-	\State \(D_a\gets D_a\cup\set{i,\dots,i+k}\)
-	\State \(i_D\gets i+k\)
-	\Else
 	\State \(D_b\gets D_b\cup\set{j,\dots,j+k}\)
 	\State \(j_D\gets j+k\)
+	\Else
+	\State \(D_a\gets D_a\cup\set{i,\dots,i+k}\)
+	\State \(i_D\gets i+k\)
 	\EndIf
 	\State \Return
 	\EndIf
@@ -359,10 +362,11 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	wynika, że nie musimy przechowywać zbiorów \(D_A\) i \(D_B\),
 	wystarczy nam jedynie \(i_D\) oraz \(j_D\).
 \end{not_storing_sets}
-\begin{termination_theorem}
+\begin{termination_theorem}[Własność stopu]
 	\label{thm:termination}
 	Procedura \textnormal{\textsc{rowncykl}}
-	ma własność stopu.
+	zatrzymuje się w skończonym czasie dla wszystkich
+	poprawnych danych wejściowych.
 \end{termination_theorem}
 \begin{proof}
 	Jeżeli dla jakiegoś \(i\) oraz \(j\) procedura
@@ -375,11 +379,10 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	więc w końcu
 	(z \hyperref[lem:niezmiennik]{Lematu \ref*{lem:niezmiennik}})
 	\hyperref[term_cond_1]{warunek stopu 1}
-	lub \hyperref[term_cond_2]{warunek stopu 2}
 	zostanie spełniony i procedura
 	\textsc{rowncykl} się zatrzyma.
 \end{proof}
-\begin{correctness_theorem}
+\begin{correctness_theorem}[Poprawność]
 	\label{thm:correctness}
 	Procedura \textnormal{\textsc{rowncykl}}
 	zwraca \(A\equiv B\) wtedy i tylko wtedy
@@ -395,8 +398,7 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	\hyperref[thm:termination]{Twierdzenia \ref*{thm:termination}}
 	wiemy, że zawsze się zatrzymuje.
 	Zwrócenie \(A\not\equiv B\) oznacza, że wystąpił
-	\hyperref[term_cond_1]{warunek stopu 1} lub
-	\hyperref[term_cond_2]{warunek stopu 2},
+	\hyperref[term_cond_1]{warunek stopu 1},
 	więc z \hyperref[lem:1_n_in_d_no_equiv]
 	{Lematu \ref*{lem:1_n_in_d_no_equiv}} \(A\not\equiv B\).
 \end{proof}
