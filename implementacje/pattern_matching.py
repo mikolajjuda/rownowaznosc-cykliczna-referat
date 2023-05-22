@@ -1,4 +1,4 @@
-def rownowaznosc_cykliczna(A: list, B: list) -> bool:
+def rownowazne_cyklicznie(A: list, B: list) -> bool:
     if len(A) != len(B):
         return False
     AA = A + A
