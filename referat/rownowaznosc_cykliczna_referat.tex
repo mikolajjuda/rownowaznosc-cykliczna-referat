@@ -91,7 +91,7 @@ pdfpagemode=FullScreen,
 	szybki algorytm sprawdzania równoważności
 	list cyklicznych Shiloacha(1979)\cite{shiloach1979}
 	zmodyfikowany do obsługi ciągów
-	numerowanych od \(0\)\cite{wazniakmimuw}.
+	numerowanych od \(0\)
 	oraz szczegółowo wyjaśniono dowód jego poprawności
 	i analizę złożoności obliczeniowej.
 \end{abstract}
@@ -162,7 +162,7 @@ można łatwo zauważyć, że
 
 Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\dots,n-1}\)
 czy \[\forall_{k\in\set{0,\dots,n-1}}\ a_{l+k}=b_k\]
-Jeśli trafi na \(l\) spełniające warunek
+Jeżeli trafi na \(l\) spełniające warunek
 to mamy \(k_0=l\)
 i algorytm zwraca \mintinline{python3}|True|,
 w przeciwnym wypadku zwraca \mintinline{python3}|False|.
@@ -181,7 +181,7 @@ czyli jest przesunięciem cyklicznym ciągu \(A\).
 	\[\set{A_0,\dots,A_{n-1}}=
 		\set{A_\mathbb{Z}}\]
 \end{A_i_B_j_all_rotations}
-Zatem jeśli sprawdzimy czy \(B\) jest spójnym podciągiem \(AA\)
+Zatem jeżeli sprawdzimy czy \(B\) jest spójnym podciągiem \(AA\)
 to otrzymamy rozwiązanie problemu równoważnosci cyklicznej.
 
 Można więc wykorzystać tytaj dowolny algorytm wyszukiwania wzorca,
@@ -226,9 +226,7 @@ Niech
 \[A_{i_0}=\min(\set{A_0,\dots,A_{n-1}})
 	\ \text{tzn.}\ \forall_{0\le i<n-1}A_{i_0}\preceq A_i\]
 analogicznie
-\[B_{j_0}=\min(\set{B_0,\dots,B_{n-1}})\]\footnote{
-	Lexicographically minimal string rotation
-}
+\[B_{j_0}=\min(\set{B_0,\dots,B_{n-1}})\]
 \begin{lemma_equiv_if_lex_min_eq}
 	\label{lem:equivalence_if_lex_min_eq}
 	\[A\equiv B \iff A_{i_0}=B_{j_0}\]
@@ -268,7 +266,7 @@ Zdefiniujmy
 	\label{lem:1_n_in_d_no_equiv}
 	\[D_A\supseteq\set{0,\dots,n-1}\lor
 		D_B\supseteq\set{0,\dots,n-1}
-		\implies A\neq B\]
+		\implies A\not\equiv B\]
 \end{lemma_1_n_in_d_no_equiv}
 \begin{proof}
 	Dowód wynika z
@@ -277,7 +275,7 @@ Zdefiniujmy
 	\[A\equiv B\implies i_0\notin D_A \land j_0\notin D_B\]
 \end{proof}
 \subsection{Algorytm}
-Główną częścią algorytmu jest szybkie zbieranie indeksów
+Zasadą działania algorytmu jest szybkie zbieranie indeksów
 przesunięć cyklicznych, które powinny być
 w zbiorach \(D_A\) i \(D_B\).\footnote{
 	W implementacji te zbiory są niejawne.
@@ -295,30 +293,27 @@ która znajduje pierwszy indeks \(k\),
 dla którego \(a_{i+k}\neq b_{j+k}\)
 i w zależności od tego, czy \(a_{i+k}<b_{j+k}\)
 dodaje do \(D_B\) zbiór \(\set{j,\dots,j+k}\)
-albo do \(D_A\) zbiór \(\set{i,\dots,i+k}\)
+albo do \(D_A\) zbiór \(\set{i,\dots,i+k+1}\)
 (Patrz \cref{lem:k_shift_greater}).
-Jeśli nie znajdzie nierówności to zwraca \(A\equiv B\).
+Jeżeli nie znajdzie nierówności to zwraca \(A\equiv B\).
 
 Procedura \textsc{rowncykl} wykonuje procedurę
 \textsc{compare} dopóki nie zajdzie jeden z powyższych warunków.
 \pagebreak
 
 \begin{algorithmic}
-	\State \(D_a\gets \emptyset\)
-	\State \(D_b\gets \emptyset\)
-	\State \(i_D\gets -1\)
-	\State \(j_D\gets -1\)
+	\State \textbf{global} \(D_a, D_B, i_D, j_D\)
 	\Procedure{compare}{$i, j$}
 	\For{$k=0,\dots,n-1$}
 	\If{\(a_{i+k}\neq b_{j+k}\)\footnote{W analizie
 			złożoności będziemy liczyć te porównania}}
 	\If{\(a_{i+k}<b_{j+k}\)}
 	\State \(D_a\gets D_a\cup\set{i,\dots,i+k}\)
+	\State \(i_D\gets i+k\)
 	\Else
 	\State \(D_b\gets D_b\cup\set{j,\dots,j+k}\)
-	\EndIf
-	\State \(i_D\gets i+k\)
 	\State \(j_D\gets j+k\)
+	\EndIf
 	\State \Return
 	\EndIf
 	\EndFor
@@ -440,7 +435,7 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	\(\abs{D_A^*}+\abs{D_B^*}\leq2n-2\)
 \end{lemma_d_star_len}
 \begin{proof}
-	Jeśli \(\abs{D_A^*}+\abs{D_B^*}\ge2n-1\)
+	Jeżeli \(\abs{D_A^*}+\abs{D_B^*}\ge2n-1\)
 	to oznacza, że
 	\[\set{0,\dots,n-1}\subset D_A^* \lor
 		\set{0,\dots,n-1}\subset D_B^*\]
