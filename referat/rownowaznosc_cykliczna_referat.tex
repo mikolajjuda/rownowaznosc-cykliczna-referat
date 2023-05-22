@@ -118,7 +118,7 @@ Dla wygody dalszego zapisu oznaczmy:
 Zdefiniujmy \(A_k\) jako listę powstałą z przesunięcia cyklicznego
 ciągu \(A\) takiego, że \(a_k\) jest
 pierwszym elementem ciągu \(A_k\).
-Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\dots,a_{n-1}]\),
+Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\dots,a_{n-1}]\)
 oraz \(B_0=[b_0,\dots,b_{n-1}]\)}
 \begin{align*}
 	A_k=[a_{k},\dots,a_n,a_0,\dots,a_{k-1}] \\
@@ -154,15 +154,15 @@ można łatwo zauważyć, że
 	\label{cor:less_k0_values_to_check}
 	Żeby ustalić istnienie \(k_0\) z
 	\hyperref[def:cyclic_equivalence_1]
-	{Definicji \ref*{def:cyclic_equivalence_1}}
-	wystarczy sprawdzić czy
+	{Definicji \ref*{def:cyclic_equivalence_1}},
+	wystarczy sprawdzić, czy
 	\[\exists_{k_0\in\set{0,\dots,n-1}}
 		\forall_{k\in\set{0,\dots,n-1}}\ a_{k_0+k}=b_k\]
 \end{less_k0_values_to_check}
 \vskip 2em
 \subsection{Algorytm}
 Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\dots,n-1}\)
-czy \[\forall_{k\in\set{0,\dots,n-1}}\ a_{l+k}=b_k\]
+czy \[\forall_{k\in\set{0,\dots,n-1}}\ a_{l+k}=b_k\].
 Jeżeli trafi na \(l\) spełniające warunek
 to mamy \(k_0=l\)
 i algorytm zwraca \mintinline{python3}|True|,
@@ -182,8 +182,8 @@ czyli jest przesunięciem cyklicznym ciągu \(A\).
 	\[\set{A_0,\dots,A_{n-1}}=
 		\set{A_\mathbb{Z}}\]
 \end{A_i_B_j_all_rotations}
-Zatem jeżeli sprawdzimy czy \(B\) jest spójnym podciągiem \(AA\)
-to otrzymamy rozwiązanie problemu równoważnosci cyklicznej.
+Zatem jeżeli sprawdzimy, czy \(B\) jest spójnym podciągiem \(AA\)
+to otrzymamy rozwiązanie problemu równoważności cyklicznej.
 \subsection{Algorytm}
 Można użyć do tego dowolnego algorytmu wyszukiwania wzorca,
 jednakże naiwny algorytm wyszukiwania wzorca sprowadza się do
@@ -195,7 +195,7 @@ o liniowej złożoności obliczeniowej
 umożliwia sprawdzenie równoważności cyklicznej
 w czasie liniowym.\cite{alg}
 Wersja wykorzystująca algorytm Knutha-Morrisa-Pratta
-wykonuje około 5n porównań.\cite{shiloach1979}
+wykonuje około \(5n\) porównań.\cite{shiloach1979}
 Wymaga on jednak dodatkowej pamięci (liniowa złożoność pamięciowa).
 \pagebreak
 \subsection[Implementacja]{Implementacja\footnote{
@@ -279,7 +279,7 @@ Zdefiniujmy
 \subsection{Algorytm}
 Zasadą działania algorytmu jest szybkie zbieranie indeksów
 przesunięć cyklicznych, które powinny być
-w zbiorach \(D_A\) i \(D_B\).\footnote{
+w zbiorach \(D_A\) i \(D_B\),\footnote{
 	W implementacji te zbiory są niejawne.
 }
 dopóki nie zajdzie jeden z poniższych warunków stopu:
@@ -301,7 +301,7 @@ albo do \(D_A\) zbiór \(\set{i,\dots,i+k}\)
 Jeżeli nie znajdzie nierówności to zwraca \(A\equiv B\).
 
 Procedura \textsc{rowncykl} wykonuje procedurę
-\textsc{compare} dopóki nie zajdzie jeden z powyższych warunków.
+\textsc{compare}, dopóki nie zajdzie jeden z powyższych warunków.
 \pagebreak
 
 \begin{algorithmic}
@@ -389,7 +389,7 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 	gdy \(A\equiv B\).
 \end{correctness_theorem}
 \begin{proof}
-	Jeżeli procedura \textsc{rowncykl} zwrócła \(A\equiv B\)
+	Jeżeli procedura \textsc{rowncykl} zwróciła \(A\equiv B\)
 	to znaczy, że procedura \textsc{compare}
 	wykazała równość dwóch przesunięć cyklicznych \(A\) i \(B\),
 	a więc \(A\equiv B\).
@@ -413,7 +413,7 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 \begin{def_D_star}
 	\label{def:D_star}
 	Oznaczmy \(D_A\) oraz \(D_B\)
-	bezpośredionio przed ostatnim wykonaniem
+	bezpośrednio przed ostatnim wykonaniem
 	procedury \textnormal{\textsc{compare}}
 	jako odpowiednio \(D_A^*\) oraz \(D_B^*\).
 \end{def_D_star}
@@ -457,7 +457,7 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 \end{proof}
 \begin{o_complexity}
 	Algorytm ma pesymistyczną złożoność czasową \(\mathcal{O}(n)\)
-	i dodatkową złożoność pamięciową \(\mathcal{O}(1)\)%
+	i dodatkową złożoność pamięciową \(\mathcal{O}(1)\)
 	(z \hyperref[cor:not_storing_sets]
 	{Wniosku \ref*{cor:not_storing_sets}})
 \end{o_complexity}
