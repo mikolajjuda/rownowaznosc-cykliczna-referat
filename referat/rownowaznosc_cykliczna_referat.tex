@@ -46,12 +46,16 @@ pdfpagemode=FullScreen,
 \newtheorem{cyclic_equivalence_2}
 [cyclic_equivalence_1]{Definicja}
 
+\theoremstyle{remark}
+\newtheorem{b_shift_def_remark}{Uwaga}[section]
+
 \theoremstyle{plain}
 \newtheorem{lemma_k0_values}{Lemat}[section]
 \newtheorem{less_k0_values_to_check}{Wniosek}[section]
 
 \theoremstyle{remark}
 \newtheorem{A_i_B_j_all_rotations}{Uwaga}[section]
+\newtheorem{equiv_iff_shift_sets_equal}{Uwaga}[section]
 
 \theoremstyle{plain}
 \newtheorem{lemma_equiv_if_lex_min_eq}{Lemat}[section]
@@ -108,38 +112,43 @@ gdy są równe w sensie list cyklicznych tzn.
 \begin{cyclic_equivalence_1}[Równoważność cykliczna]
 	\label{def:cyclic_equivalence_1}
 	\[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
-		\forall_{k\in\set{0,\dots,n-1}}\ a_{(k_0+k)\Mod{n}}=b_k\]
+		\forall_{k\in\set{0,\dots,n-1}}\
+		a_{(k_0+k)\Mod{n}}=b_k\]
 \end{cyclic_equivalence_1}
-
+\vskip 2em
 Dla wygody dalszego zapisu oznaczmy:
-\[a_k\coloneq a_{k\Mod{n}},\ b_k\coloneq b_{k\Mod{n}}
-	\ \text{dla wszystkich}\ k\ge n\]
-
+\[a_k\coloneq a_{k\Mod{n}},\ b_k\coloneq b_{k\Mod{n}}\]
+\vskip 1em
 Zdefiniujmy \(A_k\) jako listę powstałą z przesunięcia cyklicznego
 ciągu \(A\) takiego, że \(a_k\) jest
 pierwszym elementem ciągu \(A_k\).
 Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\dots,a_{n-1}]\)
 oraz \(B_0=[b_0,\dots,b_{n-1}]\)}
 \begin{align*}
-	A_k=[a_{k},\dots,a_n,a_0,\dots,a_{k-1}] \\
-	B_k=[b_{k},\dots,b_n,b_0,\dots,b_{k-1}]
+	A_k:=[a_{k},\dots,a_n,a_0,\dots,a_{k-1}] \\
+	B_k:=[b_{k},\dots,b_n,b_0,\dots,b_{k-1}]
 \end{align*}
 
-Definicję \cref{def:cyclic_equivalence_1} można
-przedstawić równoważnie jako:
+\hyperref[def:cyclic_equivalence_1]
+{Definicję \ref*{def:cyclic_equivalence_1}}
+można przedstawić równoważnie jako:
 \begin{cyclic_equivalence_2}[Równoważność cykliczna]
 	\[A\equiv B \iff \exists_{k_0\in\mathbb{Z}}
 		\ A_{k_0}=B\]
 \end{cyclic_equivalence_2}
-
-Podsumowując, problem brzmi:
-\enquote{Czy istnieje takie przesunięcie cykliczne jednego ciągu,
-	że jest po nim równy drugiemu ciagowi?}
+\vskip 2em
+\begin{b_shift_def_remark}
+	Oczywiście \(A\equiv B\) także wtedy, gdy
+	\[\exists_{k_0,l_0\in\mathbb{Z}}
+		\forall_{k\in\set{0,\dots,n-1}}\
+		a_{k_0+k}=b_{l_0+k}\]
+	lub
+	\[\exists_{k_0,l_0\in\mathbb{Z}}
+		\ A_{k_0}=B_{l_0}\]
+\end{b_shift_def_remark}
 \pagebreak
 \section{Algorytm naiwny} \label{sec:naive_alg}
-Z \hyperref[def:cyclic_equivalence_1]
-{Definicji \ref*{def:cyclic_equivalence_1}}
-można łatwo zauważyć, że
+Można łatwo zauważyć, że
 \begin{lemma_k0_values}
 	\label{lem:lemma_k0_values}
 	Jeżeli nie istnieje
@@ -165,14 +174,14 @@ Algorytm naiwny sprawdza dla każdego \(l\in\set{0,\dots,n-1}\)
 czy \[\forall_{k\in\set{0,\dots,n-1}}\ a_{l+k}=b_k\]
 Jeżeli trafi na \(l\) spełniające warunek
 to mamy \(k_0=l\)
-i algorytm zwraca \mintinline{python3}|True|,
-w przeciwnym wypadku zwraca \mintinline{python3}|False|.
-Algorytm ma złożoność kwadratową.\cite{wazniakmimuw}
+i algorytm zwraca \(A\equiv B\),
+w przeciwnym wypadku zwraca \(A\not\equiv B\).
+Algorytm ma złożoność kwadratową\cite{wazniakmimuw}.
 \subsection{Implementacja}
 \inputminted{python3}{../implementacje/naive.py}
 \pagebreak
 \section{Algorytm wykorzystujący wyszukiwanie wzorca}
-Utwórzmy listę \[AA=[a_0,\dots, a_{n-1}, a_0,\dots, a_{n-1}]\]
+Utwórzmy listę \[AA:=[a_0,\dots, a_{n-1}, a_0,\dots, a_{n-1}]\]
 i zauważmy, że dowolny spójny podciąg \(AA\) o długości \(n\)
 rozpoczynający się od indeksu \(k\) ma postać \(A_k\),
 czyli jest przesunięciem cyklicznym ciągu \(A\).
@@ -193,9 +202,9 @@ i ma złożoność kwadratową.
 Wykorzystanie algorytmu wyszukiwania wzorca
 o liniowej złożoności obliczeniowej
 umożliwia sprawdzenie równoważności cyklicznej
-w czasie liniowym.\cite{alg}
+w czasie liniowym\cite{alg}.
 Wersja wykorzystująca algorytm Knutha-Morrisa-Pratta
-wykonuje około \(5n\) porównań.\cite{shiloach1979}
+wykonuje dla tego problemu około \(5n\) porównań\cite{shiloach1979}.
 Wymaga on jednak dodatkowej pamięci (liniowa złożoność pamięciowa).
 \pagebreak
 \subsection[Implementacja]{Implementacja\footnote{
@@ -225,10 +234,16 @@ lub jest równe \(B_j\) w porządku leksykograficznym,
 a \(A_i\prec B_j\) oznacza \(A_i\preceq B_j \land A_i\neq B_j\).
 
 Niech
-\[A_{i_0}=\min(\set{A_0,\dots,A_{n-1}})
-	\ \text{tzn.}\ \forall_{0\le i<n-1}A_{i_0}\preceq A_i\]
+\[A_{i_0}:=\min(\set{A_0,\dots,A_{n-1}})\
+	\text{tzn.}\ \forall_{i\in\set{0,\dots,n-1}}\
+	A_{i_0}\preceq A_i\]
 analogicznie
-\[B_{j_0}=\min(\set{B_0,\dots,B_{n-1}})\]
+\[B_{j_0}:=\min(\set{B_0,\dots,B_{n-1}})\]
+\begin{equiv_iff_shift_sets_equal}
+	Łatwo można zauważyć, że
+	\[A\equiv B \iff
+		\set{A_0,\dots,A_{n-1}}=\set{B_0,\dots,B_{n-1}}\]
+\end{equiv_iff_shift_sets_equal}
 \begin{lemma_equiv_if_lex_min_eq}
 	\label{lem:equivalence_if_lex_min_eq}
 	\[A\equiv B \iff A_{i_0}=B_{j_0}\]
@@ -245,9 +260,9 @@ analogicznie
 	Trywialne.
 \end{proof}
 Zdefiniujmy
-\[D_A=\set{i:\exists_j\ B_j\prec A_i}\]
+\[D_A:=\set{i:\exists_j\ B_j\prec A_i}\]
 analogicznie
-\[D_B=\set{j:\exists_i\ A_i\prec B_j}\]
+\[D_B:=\set{j:\exists_i\ A_i\prec B_j}\]
 tzn. \(D_A\) to zbiór indeksów
 wyznaczających takie przesunięcia cykliczne \(A\),
 dla których istnieje dowolne przesunięcie cykliczne \(B\)
@@ -256,11 +271,11 @@ Analogicznie dla \(B\).
 \pagebreak
 
 Zdefiniujmy
-\[i_D=\begin{cases}
+\[i_D:=\begin{cases}
 		-1        & \text{jeżeli}\ D_A=\emptyset  \\
 		\max(D_A) & \text{w przeciwnym przypadku}
 	\end{cases}\]
-\[j_D=\begin{cases}
+\[j_D:=\begin{cases}
 		-1        & \text{jeżeli}\ D_B=\emptyset  \\
 		\max(D_B) & \text{w przeciwnym przypadku}
 	\end{cases}\]
