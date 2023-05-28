@@ -1,43 +1,24 @@
 def rownowazne_cyklicznie(A: list, B: list) -> bool:
     if len(A) != len(B):
         return False
-    AA = A + A
-    return KMPSearchExists(B, AA)
+    n = len(A)
 
-
-def KMPSearchExists(pattern, word) -> bool:
-    M = len(pattern)
-    N = len(word)
-    lps = [0] * M
-    j = 0
-    computeLPSArray(pattern, M, lps)
-    i = 0
-    while i < N:
-        if pattern[j] == word[i]:
-            i += 1
+    pmt = [0] * n
+    for i in range(1, n):
+        k = pmt[i - 1]
+        while k > 0 and B[i] != B[k]:
+            k = pmt[k - 1]
+        if B[i] == B[k]:
+            k += 1
+        pmt[i] = k
+    
+    j=0
+    for i in range(2*n):
+        while j>0 and A[i%n] != B[j]:
+            j = pmt[j-1]
+        if A[i%n] == B[j]:
+            if j == n-1:
+                return True
             j += 1
-        if j == M:
-            return True
-        elif i < N and pattern[j] != word[i]:
-            if j != 0:
-                j = lps[j - 1]
-            else:
-                i += 1
+
     return False
-
-
-def computeLPSArray(pat, M, lps):
-    len = 0
-    lps[0] = 0
-    i = 1
-    while i < M:
-        if pat[i] == pat[len]:
-            len += 1
-            lps[i] = len
-            i += 1
-        else:
-            if len != 0:
-                len = lps[len - 1]
-            else:
-                lps[i] = 0
-                i += 1

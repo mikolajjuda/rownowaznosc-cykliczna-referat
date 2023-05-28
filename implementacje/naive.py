@@ -1,10 +1,11 @@
-def rownowazne_cyklicznie(a: list, b: list) -> bool:
-    if len(a) != len(b):
+def rownowazne_cyklicznie(A: list, B: list) -> bool:
+    if len(A) != len(B):
         return False
-    n = len(a)
+    n = len(A)
+    
     for l in range(n):
         for k in range(n):
-            if a[(l + k) % n] != b[k]:
+            if A[(l + k) % n] != B[k]:
                 break
         else:
             return True

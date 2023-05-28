@@ -194,26 +194,13 @@ czyli jest przesunięciem cyklicznym ciągu \(A\).
 Zatem jeżeli sprawdzimy, czy \(B\) jest spójnym podciągiem \(AA\)
 to otrzymamy rozwiązanie problemu równoważności cyklicznej.
 \subsection{Algorytm}
-Można użyć do tego dowolnego algorytmu wyszukiwania wzorca,
-jednakże naiwny algorytm wyszukiwania wzorca sprowadza się do
-wcześniej przedstawionego
-\hyperref[sec:naive_alg]{algorytmu naiwnego}
-i ma złożoność kwadratową.
-Wykorzystanie algorytmu wyszukiwania wzorca
-o liniowej złożoności obliczeniowej
-umożliwia sprawdzenie równoważności cyklicznej
-w czasie liniowym\cite{alg}.
-Wersja wykorzystująca algorytm Knutha-Morrisa-Pratta
-wykonuje dla tego problemu około \(5n\) porównań\cite{shiloach1979}.
+Problem sprowadza się więc do problemu wyszukiwania wzorca,
+który można rozwiązać wykorzystując np.
+algorytm Knutha-Morrisa-Pratta.
+Wykonuje on dla sprawdzania równoważności cyklicznej około
+\(5n\) porównań\cite{shiloach1979}.
 Wymaga on jednak dodatkowej pamięci (liniowa złożoność pamięciowa).
-\pagebreak
-\subsection[Implementacja]{Implementacja\footnote{
-		Użyta implementacja algorytmu KMP (z modyfikacjami)
-		pochodzi ze strony:\\
-		\url{https://www.geeksforgeeks.org/%
-			python-program-for-kmp-algorithm%
-			-for-pattern-searching-2/}
-	}}
+\subsection{Implementacja}
 \inputminted[fontsize=\normalsize]{python3}
 {../implementacje/pattern_matching.py}
 \pagebreak

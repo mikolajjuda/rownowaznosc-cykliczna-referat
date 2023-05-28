@@ -4,9 +4,9 @@ from implementacje.fast import rownowazne_cyklicznie as fast
 
 
 def run_test(test):
-    a = list(test[0])
-    b = list(test[1])
-    answer = True if test[2] == "TAK" else False
+    a = list(map(int, test[0].split())) if " " in test[0] else list(test[0])
+    b = list(map(int, test[1].split())) if " " in test[1] else list(test[1])
+    answer = test[2] == "TAK"
 
     if naive(a, b) != answer:
         print("naive wrong")
