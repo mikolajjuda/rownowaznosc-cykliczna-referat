@@ -94,10 +94,10 @@ pdfpagemode=FullScreen,
 	Przedstawiono również
 	szybki algorytm sprawdzania równoważności
 	list cyklicznych Shiloacha(1979)\cite{shiloach1979}
-	z modyfikacją do obsługi ciągów
-	numerowanych od \(0\)
-	i pewnymi uproszczeniami\cite{wazniakmimuw}
-	oraz wyjaśniono dowód jego poprawności
+	z pewnymi uproszczeniami\cite{alg}
+	i modyfikacją do obsługi
+	ciągów numerowanych od \(0\)\cite{wazniakmimuw}
+	oraz pokazano dowód jego poprawności
 	i analizę złożoności obliczeniowej.
 \end{abstract}
 \tableofcontents
@@ -121,7 +121,7 @@ Dla wygody dalszego zapisu oznaczmy:
 \vskip 1em
 Zdefiniujmy \(A_k\) jako listę powstałą z przesunięcia cyklicznego
 ciągu \(A\) takiego, że \(a_k\) jest
-pierwszym elementem ciągu \(A_k\).
+pierwszym elementem \(A_k\).
 Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\dots,a_{n-1}]\)
 oraz \(B_0=[b_0,\dots,b_{n-1}]\)}
 \begin{align*}
@@ -289,7 +289,7 @@ dopóki nie zajdzie jeden z poniższych warunków stopu:
 	\item \label{term_cond_1} \(D_A\supseteq\set{0,\dots,n-1}
 	      \lor D_B\supseteq\set{0,\dots,n-1}\)
 	\item \label{term_cond_2}Znajdziemy takie \(i\) oraz \(j\),
-	      że \(\forall_{0\le k\le n-1}\ a_{i+k}=b_{j+k}\)
+	      że \(\forall_{k\in\set{0,\dots,n-1}}\ a_{i+k}=b_{j+k}\)
 	      (tzn. \(A\equiv B\))
 \end{enumerate}
 Głównym elementem algorytmu będzie procedura \textsc{compare},
