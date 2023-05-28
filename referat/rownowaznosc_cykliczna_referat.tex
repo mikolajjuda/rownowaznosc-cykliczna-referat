@@ -467,5 +467,45 @@ Procedura \textsc{rowncykl} wykonuje procedurę
 \subsection{Implementacja}
 \inputminted{python3}{../implementacje/fast.py}
 \pagebreak
+\subsection{Przykłady wykonania}
+Listy wypisywane z przesunięciem
+\((i+1)\) dla \(A\) i \((j+1)\) dla \(B\)
+\vskip 1em
+	{
+		\centering
+		\begin{tabular}{|c|}
+			\hline
+			\(n=7\)                                    \\
+			\(A=[1,2,1,2,1,2,1]\)                      \\
+			\(B=[2,1,2,1,1,2,1]\)                      \\
+			\hline
+			\(i=-1,j=-1\)                              \\
+			\(A_0=[\textcolor{red}{1},2,1,2,1,2,1]\)   \\
+			\(B_0=[\textcolor{Green}{2},1,2,1,1,2,1]\) \\
+			\(k=1, A_0\prec B_0\)                      \\
+			\hline
+			\(i=-1,j=0\)                               \\
+			\(A_0=[1,2,1,\textcolor{Green}{2},1,2,1]\) \\
+			\(B_1=[1,2,1,\textcolor{red}{1},2,1,2]\)   \\
+			\(k=4, B_1\prec A_0\)                      \\
+			\hline
+			\(i=3,j=0\)                                \\
+			\(A_4=[1,2,1,1,2,1,2]\)                    \\
+			\(B_1=[1,2,1,1,2,1,2]\)                    \\
+			brak nierówności                           \\
+			\hline
+			\(A\equiv B\)                              \\
+			\hline
+		\end{tabular}
+		\quad
+		\begin{tabular}{|c|}
+			\hline
+			\(n=8\)                             \\
+			TODO: example for \(A\not\equiv B\) \\
+			\hline
+		\end{tabular}
+		\par
+	}
+\pagebreak
 \printbibliography[heading=bibintoc]
 \end{document}
