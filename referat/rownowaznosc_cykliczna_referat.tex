@@ -130,8 +130,8 @@ pierwszym elementem \(A_k\).
 Analogicznie dla \(B_k\).\footnote{\(A_0=[a_0,\dots,a_{n-1}]\)
 oraz \(B_0=[b_0,\dots,b_{n-1}]\)}
 \begin{align*}
-	A_k:=[a_{k},\dots,a_n,a_0,\dots,a_{k-1}] \\
-	B_k:=[b_{k},\dots,b_n,b_0,\dots,b_{k-1}]
+	A_k:=[a_{k},\dots,a_{n-1},a_0,\dots,a_{k-1}] \\
+	B_k:=[b_{k},\dots,b_{n-1},b_0,\dots,b_{k-1}]
 \end{align*}
 
 \hyperref[def:cyclic_equivalence_1]
@@ -245,8 +245,10 @@ analogicznie
 \end{proof}
 \begin{lemma_k_shift_greater}
 	\label{lem:k_shift_greater}
-	\[\forall_{0\le l<k}\ a_{i+l}=b_{j+l} \land a_{i+k}<b_{j+k}
-		\implies \forall_{0\le l\le k}\ A_{i+l}\prec B_{j+l}\]
+	\[\forall_{l\in\set{0,\dots,k-1}}\ a_{i+l}=b_{j+l}
+		\land a_{i+k}<b_{j+k}
+		\implies \forall_{l\in\set{0,\dots,k}}
+		A_{i+l}\prec B_{j+l}\]
 \end{lemma_k_shift_greater}
 \begin{proof}
 	Trywialne.
