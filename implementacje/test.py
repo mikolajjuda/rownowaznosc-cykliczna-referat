@@ -1,6 +1,6 @@
-from implementacje.naive import rownowazne_cyklicznie as naive
-from implementacje.pattern_matching import rownowazne_cyklicznie as pattern_matching
-from implementacje.fast import rownowazne_cyklicznie as fast
+from naive import rownowazne_cyklicznie as naive
+from pattern_matching import rownowazne_cyklicznie as pattern_matching
+from fast import rownowazne_cyklicznie as fast
 
 
 def run_test(test):
